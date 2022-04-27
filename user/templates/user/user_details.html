@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ user.username }}
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    .imgmg {
+        margin-top: 6px;
+        height: 175px;
+          width: 175px;
+    }
+    .product {
+        height: 300px;
+        width: 350px;
+    }
+    .red {
+        background-color: #B22222;
+        color: black;
+    }
+    .green {
+        background-color: #228B22;
+        color: black;
+    }
+</style>
+
+
+<div class="row py-4 px-10">
+    <div class="col-xl-6 col-md-7 col-sm-10 mx-auto">
+
+        <!-- Profile widget -->
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="px-4 pt-0 pb-4 bg-dark">
+                <div class="media align-items-end profile-header">
+                    <div class="profile mr-4">
+                        <img src="{{ customer.avatarURL }}" alt="..." class="imgmg rounded mb-2 img-thumbnail">
+                        {% if request.user.customer == customer  %}
+                            <a href="" class="btn btn-dark btn-sm btn-block">Edit profile</a>
+                            <a href="" class="btn btn-dark btn-sm btn-block">My orders</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="media-body mb-5 text-white">
+                        <h3 class="mt-0 mb-0 text-white">{{ customer }}</h3>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-light p-4 d-flex justify-content-end text-center">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                        <h5 class="font-weight-bold mb-0 d-block">{{ percent }}% is reccommending this user</h5><small class="text-muted">Positive of total {{ opinion_number }}</small>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="py-4 px-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="mb-0">Listed products</h5><a href="#" class="btn btn-link text-muted">Show all</a>
+                </div>
+                <div class="row">
+                    {% for product in customer.products.all %}
+                    <div class="col-lg-6 mb-2 pr-lg-1">
+                        <a href="">
+                            <img src="{{ product.image.url }}" alt="" class="product img-fluid rounded shadow-sm">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="py-4">
+                    <h5 class="mb-3">Profile comments</h5>
+                    {% for comment in customer.profile_comments.all %}
+                    <div class="container mt-5">
+                        <div class="row d-flex justify-content-center">
+                            <div class="card p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="user d-flex flex-row align-items-center"> <img src="{{ comment.author.avatarURL }}" width="30" class="user-img rounded-circle mr-2">
+                                        <span><small class="font-weight-bold text-primary h6"><a href="{% url 'user:customer-details' comment.author.pk %}">{{ comment.author }}</a></small> -> <small class="font-weight-bold h6">{{ comment.body }}</small></span> </div> <small>{{ comment.created|timesince }}</small>
+                                </div>
+                                <div class="action d-flex justify-content-between mt-2 align-items-center">
+                                    <div class="reply px-4">
+                                        {% if comment.author == request.user.customer %}
+                                            <a href=""><small>Remove</small> <span class="dots"></span></a>
+                                            <a href=""><small>Update</small> <span class="dots"></span></a>
+                                        {% else %}
+                                        <span class="dots"></span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="icons align-items-center text-white {% if comment.type == 'Positive' %} bg-success {% else %} bg-danger {% endif %}">
+                                        <i class="fa fa-star text-warning"></i> {{ comment.type }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </div>
+
+                {% if request.user.customer != customer %}
+
+                {% if request.user.customer not in comments_customers %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Comment</button>
+                </form>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div><!-- End profile widget -->
+
+    </div>
+</div>
+
+{% endblock content %}
