@@ -8,5 +8,7 @@ app_name = 'user'
 urlpatterns = [
     path('login/', LoginView.as_view(template_name='user/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('<int:pk>/', views.CustomerDetails.as_view(), name='customer-details')
+    path('<int:pk>/', views.CustomerDetails.as_view(), name='customer-details'),
+    path('<int:pk>/update/', views.CustomerUpdate.as_view(), name='customer-update'),
+    path('register/', views.RegisterUser.as_view(), name='register')
 ]

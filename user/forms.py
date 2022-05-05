@@ -1,5 +1,7 @@
 from django import forms
-from .models import Comment
+from .models import Comment, Customer
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 
 class CommentCreateForm(forms.ModelForm):
@@ -12,3 +14,23 @@ class CommentCreateForm(forms.ModelForm):
         widgets = {
             'body': forms.Textarea(attrs={'class': 'form-control'})
         }
+
+
+class CustomerUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = [
+            'name',
+            'avatar'
+        ]
+
+
+class UserRegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+            'password1',
+            'password2'
+        ]

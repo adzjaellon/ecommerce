@@ -17,3 +17,7 @@ class ProductCreate(CreateView):
 
     def get_success_url(self):
         return reverse('product:main-page')
+
+    def form_valid(self, form):
+        form.instance.seller = self.request.user.customer
+        return super().form_valid(form)
