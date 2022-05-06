@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import DetailView, UpdateView, View
-from .models import Customer
+from django.views.generic import DetailView, UpdateView, View, DeleteView
+from .models import Customer, Comment
 from django.views.generic.edit import FormMixin
-from .forms import CommentCreateForm, CustomerUpdateForm, UserRegisterForm
+from .forms import CommentCreateForm, CustomerUpdateForm, UserRegisterForm, CommentUpdateForm
 from django.shortcuts import reverse, redirect
 
 
@@ -83,3 +83,29 @@ class CustomerUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse('user:customer-details', kwargs={'pk': self.get_object().pk})
+
+
+class CommentDelete(DeleteView):
+    model = Comment
+
+    def get(self, request, **kwargs):
+        if request.user.customer != self.get_object().author:
+            return reverse('user:customer-details', kwargs={'pk': self.get_object().receiver.pk})
+        return self.post(request, **kwargs)
+
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER')
+
+
+class CommentUpdate(UpdateView):
+    model = Comment
+    form_class = CommentUpdateForm
+    template_name = 'comment/update.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.customer != self.get_object().author:
+            return redirect('product:main-page')
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('user:customer-details', kwargs={'pk': self.get_object().receiver.pk})

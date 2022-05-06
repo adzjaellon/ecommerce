@@ -8,7 +8,8 @@ app_name = 'product'
 
 urlpatterns = [
     path('', views.ProductList.as_view(), name='main-page'),
-    path('create/', views.ProductCreate.as_view(), name='product-create')
+    path('create/', views.ProductCreate.as_view(), name='product-create'),
+    path('<int:pk>/details/', views.ProductDetails.as_view(), name='product-details')
 ]
 
 if settings.DEBUG:

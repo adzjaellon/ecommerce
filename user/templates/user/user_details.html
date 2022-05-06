@@ -85,8 +85,8 @@
                                 <div class="action d-flex justify-content-between mt-2 align-items-center">
                                     <div class="reply px-4">
                                         {% if comment.author == request.user.customer %}
-                                            <a href=""><small>Remove</small> <span class="dots"></span></a>
-                                            <a href=""><small>Update</small> <span class="dots"></span></a>
+                                            <a href="{% url 'user:comment-delete' comment.pk %}"><small>Remove</small> <span class="dots"></span></a>
+                                            <a href="{% url 'user:comment-update' comment.pk %}"><small>Update</small> <span class="dots"></span></a>
                                         {% else %}
                                         <span class="dots"></span>
                                         {% endif %}
@@ -102,7 +102,7 @@
                     {% endfor %}
                 </div>
 
-                {% if request.user.customer != user %}
+                {% if request.user.customer != customer %}
 
                     {% if request.user.customer not in comments_customers %}
                     <form action="" method="post">
