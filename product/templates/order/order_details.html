@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+<div class="container bootstrap snippets bootdey">
+    <div class="col-md-9 col-sm-8 content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-info panel-shadow">
+                    <div class="panel-heading">
+                        <h3>
+                            <img class="img-circle img-thumbnail" src="{{ request.user.customer.imageURL }}">
+                            {{ order }}
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in items %}
+                                <tr>
+                                    <td><img src="{{ item.product.imageURL }}" class="img-cart"></td>
+                                    <td><strong></strong><p>{{ item.product }}</p></td>
+                                    <td>
+                                        {{ item.quantity }}
+
+                                    </td>
+                                    <td>{{ item.product.price }}</td>
+                                    <td>{% widthratio item.product.price 1 item.quantity %}</td>
+                                </tr>
+
+                                {% endfor %}
+
+                                <tr>
+                                    <td colspan="6">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right"><strong>Total</strong></td>
+                                    <td>{{ order.cart_value }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

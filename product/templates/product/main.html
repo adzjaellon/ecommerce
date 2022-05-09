@@ -27,7 +27,11 @@
 
                         {% for product in products %}
                         <div class="row p-2 bg-white border rounded">
-                            <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="{{ product.image.url }}"></div>
+                            <div class="col-md-3 mt-1">
+                                <a href="{% url 'product:product-details' product.pk %}">
+                                    <img class="img-fluid img-responsive rounded product-image" src="{{ product.image.url }}">
+                                </a>
+                            </div>
                             <div class="col-md-6 mt-1">
                                 <h5>{{ product.name }}</h5>
 
