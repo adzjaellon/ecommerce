@@ -1,9 +1,10 @@
-from django.shortcuts import render
-from django.views.generic import DetailView, UpdateView, View, DeleteView
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import DetailView, UpdateView, View, DeleteView, ListView
 from .models import Customer, Comment
 from django.views.generic.edit import FormMixin
 from .forms import CommentCreateForm, CustomerUpdateForm, UserRegisterForm, CommentUpdateForm
 from django.shortcuts import reverse, redirect
+from product.models import Order
 
 
 class RegisterUser(View):
@@ -109,3 +110,15 @@ class CommentUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse('user:customer-details', kwargs={'pk': self.get_object().receiver.pk})
+
+
+class CustomerOrders(ListView):
+    model = Order
+    template_name = 'user/user_orders.html'
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        customer = get_object_or_404(Customer, pk=pk)
+        orders = Order.objects.filter(customer=customer, complete=True).order_by('-ordered')
+        return orders

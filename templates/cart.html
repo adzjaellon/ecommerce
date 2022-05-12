@@ -86,7 +86,7 @@
                 </div>
                 <br>
                 <a href="{% url 'product:main-page' %}" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Continue Shopping</a>
-                <a href="" class="btn btn-primary pull-right">Next<span class="glyphicon glyphicon-chevron-right"></span></a>
+                <a href="{% url 'checkout:process_payment' order.cart_value order.pk %}" class="btn btn-primary pull-right">Next<span class="glyphicon glyphicon-chevron-right"></span></a>
 
             </div>
         </div>

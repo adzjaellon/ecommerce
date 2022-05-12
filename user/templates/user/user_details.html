@@ -39,7 +39,7 @@
                         <img src="{{ customer.avatarURL }}" alt="..." class="imgmg rounded mb-2 img-thumbnail">
                         {% if request.user.customer == customer  %}
                             <a href="{% url 'user:customer-update' customer.pk %}" class="btn btn-dark btn-sm btn-block">Edit profile</a>
-                            <a href="" class="btn btn-dark btn-sm btn-block">My orders</a>
+                            <a href="{% url 'user:customer-orders' customer.pk %}" class="btn btn-dark btn-sm btn-block">My orders</a>
                         {% endif %}
                     </div>
 

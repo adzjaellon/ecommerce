@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="content-section">
+    <div class="container">
+        Cart cant be empty!
+        <br>
+        <a href="{% url 'product:basket' %}">Back to basket</a>
+
+    </div>
+</div>
+{% endblock content %}

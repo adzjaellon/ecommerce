@@ -13,6 +13,9 @@ class ProductList(ListView):
     template_name = 'product/main.html'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        return Product.objects.all().order_by('-date_added')
+
 
 class ProductCreate(LoginRequiredMixin, CreateView):
     model = Product
@@ -55,6 +58,19 @@ class CartView(LoginRequiredMixin, View):
             'order': order
         }
         return render(request, 'cart.html', context)
+
+
+class OrderDetails(LoginRequiredMixin, DetailView):
+    model = Order
+    template_name = 'order/order_details.html'
+    context_object_name = 'order'
+
+    def get_context_data(self, **kwargs):
+        order_items = self.get_object().items.all()
+        context = super().get_context_data(**kwargs)
+
+        context['items'] = order_items
+        return context
 
 
 class AddToCart(LoginRequiredMixin, View):
