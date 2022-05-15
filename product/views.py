@@ -45,6 +45,20 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('product:product-details', kwargs={'pk': self.get_object().pk})
 
 
+class ProductSearch(View):
+    def get(self, request, *args, **kwargs):
+        search = request.GET.get('search')
+
+        if search:
+            qs = Product.objects.filter(name__icontains=search)
+        else:
+            qs = []
+
+        context = {
+            'products': qs
+        }
+        return render(request, 'product/product_search.html', context)
+
 # cart
 
 

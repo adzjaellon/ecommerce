@@ -16,6 +16,7 @@ urlpatterns = [
     path('delete-from-cart/<int:pk>/', views.DeleteFromCart.as_view(), name='delete-from-cart'),
     path('update-quantity/', views.UpdateCartQuantity.as_view(), name='update-quantity'),
     path('order/<int:pk>/', views.OrderDetails.as_view(), name='order-details'),
+    path('search/', views.ProductSearch.as_view(), name='search')
 ]
 
 if settings.DEBUG:
