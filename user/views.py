@@ -3,8 +3,9 @@ from django.views.generic import DetailView, UpdateView, View, DeleteView, ListV
 from .models import Customer, Comment
 from django.views.generic.edit import FormMixin
 from .forms import CommentCreateForm, CustomerUpdateForm, UserRegisterForm, CommentUpdateForm
-from django.shortcuts import reverse, redirect
+from django.shortcuts import reverse, redirect, HttpResponseRedirect
 from product.models import Order
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class RegisterUser(View):
@@ -25,7 +26,7 @@ class RegisterUser(View):
         return render(request, 'user/register_user.html', context)
 
 
-class CustomerDetails(FormMixin, DetailView):
+class CustomerDetails(LoginRequiredMixin, FormMixin, DetailView):
     model = Customer
     template_name = 'user/user_details.html'
     context_object_name = 'customer'
@@ -71,7 +72,7 @@ class CustomerDetails(FormMixin, DetailView):
         return self.request.META.get('HTTP_REFERER')
 
 
-class CustomerUpdate(UpdateView):
+class CustomerUpdate(LoginRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerUpdateForm
     template_name = 'user/user_update.html'
@@ -86,7 +87,7 @@ class CustomerUpdate(UpdateView):
         return reverse('user:customer-details', kwargs={'pk': self.get_object().pk})
 
 
-class CommentDelete(DeleteView):
+class CommentDelete(LoginRequiredMixin, DeleteView):
     model = Comment
 
     def get(self, request, **kwargs):
@@ -98,7 +99,7 @@ class CommentDelete(DeleteView):
         return self.request.META.get('HTTP_REFERER')
 
 
-class CommentUpdate(UpdateView):
+class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment
     form_class = CommentUpdateForm
     template_name = 'comment/update.html'
@@ -112,7 +113,7 @@ class CommentUpdate(UpdateView):
         return reverse('user:customer-details', kwargs={'pk': self.get_object().receiver.pk})
 
 
-class CustomerOrders(ListView):
+class CustomerOrders(LoginRequiredMixin, ListView):
     model = Order
     template_name = 'user/user_orders.html'
     context_object_name = 'orders'
@@ -122,3 +123,14 @@ class CustomerOrders(ListView):
         customer = get_object_or_404(Customer, pk=pk)
         orders = Order.objects.filter(customer=customer, complete=True).order_by('-ordered')
         return orders
+
+
+class UserSearch(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        user = request.GET.get('user_search')
+
+        if user:
+            queryset = Customer.objects.filter(name__icontains=user)
+            return render(request, 'user/user_search.html', context={'users': queryset})
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

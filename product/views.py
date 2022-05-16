@@ -51,13 +51,9 @@ class ProductSearch(View):
 
         if search:
             qs = Product.objects.filter(name__icontains=search)
-        else:
-            qs = []
+            return render(request, 'product/product_search.html', context={'products': qs})
 
-        context = {
-            'products': qs
-        }
-        return render(request, 'product/product_search.html', context)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # cart
 
