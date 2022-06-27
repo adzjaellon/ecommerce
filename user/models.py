@@ -36,3 +36,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.author} - {self.body}'
+
+
+class Wishlist(models.Model):
+    user = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    products = models.ManyToManyField('product.Product', blank=True, null=True)
+
+    def __str__(self):
+        return self.user.user.username

@@ -45,7 +45,10 @@
 
                                 <div class="d-flex flex-column mt-4">
                                     <a href="{% url 'product:product-details' product.pk %}" class="btn btn-primary btn-sm">Details</a>
-                                    <button class="btn btn-outline-primary btn-sm mt-2" type="button">Add to wishlist</button>
+                                    <form action="{% url 'user:add-to-wishlist' %}" method="post">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-primary btn-sm mt-2" type="submit" name="pk" value="{{product.pk}}">Add to wishlist</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

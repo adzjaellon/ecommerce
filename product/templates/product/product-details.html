@@ -423,7 +423,8 @@ b, strong {
     <div class="row mt-2">
         <div class="col-md-5">
             {% if request.user.customer == product.seller %}
-            <a href="{% url 'product:product-update' product.pk %}">Update</a>
+                <a href="{% url 'product:product-update' product.pk %}" class="btn btn-primary">Update</a>
+                <a href="{% url 'product:product-delete' product.pk %}" class="btn btn-primary">Delete</a>
             {% endif %}
             <div class="project-info-box mt-0">
                 <h5>Description:</h5>

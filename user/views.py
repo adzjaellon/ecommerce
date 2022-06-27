@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, UpdateView, View, DeleteView, ListView
-from .models import Customer, Comment
+from .models import Customer, Comment, Wishlist
 from django.views.generic.edit import FormMixin
 from .forms import CommentCreateForm, CustomerUpdateForm, UserRegisterForm, CommentUpdateForm
 from django.shortcuts import reverse, redirect, HttpResponseRedirect
-from product.models import Order
+from product.models import Order, Product
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -134,3 +134,47 @@ class UserSearch(LoginRequiredMixin, View):
             return render(request, 'user/user_search.html', context={'users': queryset})
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class AddToWishlist(View):
+    def post(self, request, **kwargs):
+        pk = request.POST.get('pk')
+        print(pk)
+        item = Product.objects.get(pk=pk)
+        user = Customer.objects.get(user=request.user)
+        wishlist, created = Wishlist.objects.get_or_create(user=user)
+        if item not in wishlist.products.all():
+            wishlist.products.add(item)
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class RemoveFromWishlist(View):
+    def post(self, request, **kwargs):
+        pk = request.POST.get('pk')
+        print(pk)
+        item = Product.objects.get(pk=pk)
+        user = Customer.objects.get(user=request.user)
+        wishlist, created = Wishlist.objects.get_or_create(user=user)
+        wishlist.products.remove(item)
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class WishlistDetails(LoginRequiredMixin, DetailView):
+    model = Wishlist
+    context_object_name = 'wishlist'
+    template_name = 'user/user_wishlist.html'
+
+    def get_object(self, queryset=None):
+        print(self.kwargs)
+        pk = self.kwargs['pk']
+        user = get_object_or_404(Customer, pk=pk)
+        obj, created = Wishlist.objects.get_or_create(user=user)
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['products'] = self.get_object().products.all()
+
+        return context

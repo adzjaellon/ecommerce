@@ -41,8 +41,27 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'product/product_update.html'
     form_class = ProductCreateForm
 
+    def get(self, request, *args, **kwargs):
+        if request.user.customer != self.get_object().seller:
+            return redirect('product:main-page')
+        return super().get(request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse('product:product-details', kwargs={'pk': self.get_object().pk})
+
+
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    model = Product
+    template_name = 'product/product_delete.html'
+    context_object_name = 'product'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.customer != self.get_object().seller:
+            return redirect('product:main-page')
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('product:main-page')
 
 
 class ProductSearch(View):
