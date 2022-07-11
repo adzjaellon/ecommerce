@@ -1,6 +1,6 @@
 ## Content
 * [General informations](#General-informations)
-* [Screenshots](#Some-screenshots-from-the-website)
+
 
 
 # General informations
@@ -12,4 +12,4 @@ Simple ecommerce store that includes features such as:
 * Items/user filtering by content
 * User recommendation system with comments
 * Basket functionality with payment using paypal
-
+* Finished orders history
