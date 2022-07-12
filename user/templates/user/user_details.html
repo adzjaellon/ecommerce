@@ -67,7 +67,7 @@
                 <div class="row">
                     {% for product in customer.products.all %}
                     <div class="col-lg-6 mb-2 pr-lg-1">
-                        <a href="">
+                        <a href="{% url 'product:product-details' product.pk %}">
                             <img src="{{ product.image.url }}" alt="" class="product img-fluid rounded shadow-sm">
                         </a>
                     </div>
